@@ -1,0 +1,128 @@
+$id = 0
+
+class Shape
+    attr_reader:id
+    attr_accessor:name
+    def initialize
+        $id += 1
+        @name = "Shape"
+    end
+        
+    def print
+        printf("%s : %d\n", @name, $id)
+    end
+    
+    def perimeter
+        puts "NIL"    
+    end
+    
+    def area
+        puts "NIL"
+    end
+end 
+
+class Circle < Shape
+    def initialize(input_radius)
+        $id += 1
+        @radius = input_radius
+        @name = "Circle"
+    end
+    
+    def perimeter
+        @p =  2*Math::PI*@radius
+        printf("Perimeter: %f\n",@p)
+    end
+    
+    def area
+        @a = @radius*@radius*Math::PI
+        printf("Area: %f\n", @a)
+    end
+end
+
+class Ellipse < Shape
+    def initialize(a, b)
+        if(a >= b)
+            @semi_major = a
+            @semi_minor = b
+        else
+            @semi_major = b
+            @semi_minor = a
+        end
+        $id += 1
+        @name = "Ellipse"
+    end
+    
+    def area
+        @a = Math::PI*@semi_major*@semi_minor
+        printf("Area: %f\n",@a)
+    end
+    
+    def eccentricity
+        begin
+            @c = Math.sqrt(@semi_major**2 - @semi_minor**2)
+        rescue
+            puts "Can't take the square root of a negative number"
+            exit
+        else
+            printf("Eccentricity: %f\n", @c)
+        end
+    end
+end
+
+class Rhombus < Shape
+    def initialize(new_d1, new_d2)
+        @d1 = new_d1
+        @d2 = new_d2
+        $id += 1
+        @name = "Rhombus"
+    end
+    
+    def perimeter
+        @p = 2.0*@d1 + 2.0*@d2
+        printf("Perimeter: %f\n",@p)
+    end
+    
+    def area
+        @a = (@d1*@d2)/2.0
+        printf("Area: %f\n",@a)
+    end
+    
+    def inradius
+        begin
+            @r = (@d1*@d2)/(2.0*Math.sqrt((@d1**2)+(@d2**2)))
+        rescue    
+            puts "Can't divide by 0 or take the square root of a negative number"
+            exit
+        else
+            printf("In-radius: %f\n", @r)   
+        end
+    end
+end
+
+s1 = Shape.new
+s1.print
+s1.perimeter
+s1.area
+
+c1 = Circle.new(9.6)
+c1.print
+c1.perimeter
+c1.area
+
+e1 = Ellipse.new(3,4.5)
+e1.print
+e1.perimeter
+e1.area
+e1.eccentricity
+
+e2 = Ellipse.new(5,8)
+e2.print
+e2.perimeter
+e2.area
+e2.eccentricity
+
+r1 = Rhombus.new(9,7)
+r1.print
+r1.perimeter
+r1.area
+r1.inradius

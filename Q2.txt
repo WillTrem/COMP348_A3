@@ -1,0 +1,119 @@
+$id = 0
+
+class Shape
+    attr_reader:id
+    attr_accessor:name
+    def initialize
+        $id += 1
+        @name = "Shape"
+    end
+        
+    def print
+        printf("%d: %s", $id, @name)
+    end
+    
+    def perimeter
+        printf(", perimeter: undefined")    
+    end
+    
+    def area
+        printf(", area: undefined\n")
+    end
+end 
+
+class Circle < Shape
+    def initialize(input_radius)
+        $id += 1
+        @radius = input_radius
+        @name = "Circle"
+    end
+    
+    def perimeter
+        @p =  2*Math::PI*@radius
+        
+    end
+    
+    def area
+        @a = @radius*@radius*Math::PI
+    end
+end
+
+class Ellipse < Shape
+    def initialize(a, b)
+        if(a >= b)
+            @semi_major = a
+            @semi_minor = b
+        else
+            @semi_major = b
+            @semi_minor = a
+        end
+        $id += 1
+        @name = "Ellipse"
+    end
+    
+    def area
+        @a = Math::PI*@semi_major*@semi_minor
+    end
+    
+    def eccentricity
+        begin
+            @c = Math.sqrt(@semi_major**2 - @semi_minor**2)
+        rescue
+            puts "Can't take the square root of a negative number"
+            exit
+        end
+    end
+end
+
+class Rhombus < Shape
+    def initialize(new_d1, new_d2)
+        @d1 = new_d1
+        @d2 = new_d2
+        $id += 1
+        @name = "Rhombus"
+    end
+    
+    def perimeter
+        @side = (Math.sqrt(@d1**2 + @d2**2))/2.0
+        @p = 4.0*@side
+    end
+    
+    def area
+        @a = (@d1*@d2)/2.0
+    end
+    
+    def inradius
+        begin
+            @r = (@d1*@d2)/(2.0*Math.sqrt((@d1**2)+(@d2**2)))
+        rescue    
+            puts "Can't divide by 0 or take the square root of a negative number"
+            exit 
+        end
+    end
+end
+
+IO.foreach('shapes.txt') do |line|
+    a = line.split(" ")
+    if(a[0] == "shape")
+        s = Shape.new
+        s.print
+        s.perimeter
+        s.area
+    elsif(a[0] == "circle")
+        c = Circle.new(a[1].to_i)
+        c.print
+        printf(", perimeter: %f, area: %f\n", c.perimeter, c.area)
+    elsif(a[0] == "ellipse")
+        e = Ellipse.new(a[1].to_i, a[2].to_i)
+        e.print
+        printf("%s, area: %f\n", e.perimeter, e.area)
+        printf("   linear eccentricity: %f\n",e.eccentricity) 
+    elsif(a[0] == "rhombus")
+        r = Rhombus.new(a[1].to_i,a[2].to_i)
+        r.print
+        printf(", perimeter: %f, area: %f\n",r.perimeter, r.area)
+        printf("    in-radius: %f\n", r.inradius)
+    else
+        puts "Invalid Shape"
+    end
+end
